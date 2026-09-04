@@ -25,6 +25,24 @@ import {
   Award,
   X,
   Home,
+  Sprout,
+  Droplets,
+  Hammer,
+  Zap,
+  TrendingUp,
+  FileCheck2,
+  Users,
+  Leaf,
+  Trees,
+  Maximize2,
+  Car,
+  Mountain,
+  Image,
+  Bike,
+  Footprints,
+  Waves,
+  Camera,
+  Dumbbell,
 } from "lucide-react";
 import {
   Lot,
@@ -63,6 +81,36 @@ const SORT_OPTIONS: { value: SortKey; label: string }[] = [
   { value: "area_asc", label: "Área: m² más pequeños primero" },
   { value: "code", label: "Orden: por código de lote" },
 ];
+
+const FEATURE_ICON: Record<string, React.ComponentType<{ className?: string }>> = {
+  Sprout,
+  Droplets,
+  Hammer,
+  Zap,
+  TrendingUp,
+  FileCheck2,
+  Users,
+  Leaf,
+  Trees,
+  Maximize2,
+  Car,
+  Mountain,
+  Image,
+  Bike,
+  Footprints,
+  Waves,
+  Camera,
+  Dumbbell,
+  ShieldCheck,
+  Award,
+  BadgeCheck,
+  Sparkles,
+  Home,
+  Ruler,
+  MapPin,
+  LayoutGrid,
+  CheckCircle2,
+};
 
 export function ProjectDetail({ project }: Props) {
   const [filterStatus, setFilterStatus] = useState<
@@ -444,6 +492,47 @@ export function ProjectDetail({ project }: Props) {
                 </div>
               ))}
             </div>
+
+            {project.features?.length > 0 && (
+              <div className="mt-12">
+                <div className="flex items-center gap-2 mb-6">
+                  <div className="h-9 w-1 rounded-full bg-gradient-to-b from-[#0f4c81] to-[#1460a6]" />
+                  <div>
+                    <div className="text-[11px] font-black uppercase tracking-widest text-slate-400">
+                      3 razones clave
+                    </div>
+                    <h3 className="font-display text-2xl font-black text-slate-900">
+                      Por qué elegir {project.shortName}
+                    </h3>
+                  </div>
+                </div>
+                <div className="grid sm:grid-cols-3 gap-4">
+                  {project.features.map((f) => {
+                    const Icon =
+                      FEATURE_ICON[f.icon] || FEATURE_ICON["Sparkles"];
+                    return (
+                      <div
+                        key={f.title}
+                        className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 transition-all hover:-translate-y-0.5 hover:border-[#0f4c81]/40 hover:shadow-xl hover:shadow-[#0f4c81]/10"
+                      >
+                        <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gradient-to-br from-amber-300/20 to-transparent blur-2xl transition-opacity group-hover:opacity-80" />
+                        <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#0f4c81] to-[#1460a6] text-white shadow-lg shadow-[#0f4c81]/25 mb-5">
+                          <Icon className="h-7 w-7" />
+                        </div>
+                        <div className="relative">
+                          <div className="font-display text-lg font-black text-slate-900 mb-1.5">
+                            {f.title}
+                          </div>
+                          <div className="text-sm leading-relaxed text-slate-600">
+                            {f.description}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="lg:col-span-5">
