@@ -120,7 +120,7 @@ export function Navbar() {
                               {PROJECTS.length} proyectos en Cajamarca
                             </div>
                             <div className="text-xs text-slate-500 mt-1">
-                              Cada uno con su plano Google My Maps e inventario
+                              Cada uno con su plano interactivo e inventario
                               actualizado
                             </div>
                           </div>

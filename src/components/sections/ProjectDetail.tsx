@@ -488,7 +488,7 @@ export function ProjectDetail({ project }: Props) {
               </div>
               <h2 className="font-display text-3xl md:text-5xl font-black tracking-tight text-slate-900 leading-tight">
                 Ubicación exacta ·{" "}
-                <span className="text-[#0f4c81]">Google My Maps</span>
+                <span className="text-[#0f4c81]">Plano interactivo</span>
               </h2>
               <p className="mt-4 text-lg text-slate-600">
                 Visualiza todos los lotes del proyecto, calles, accesos y
@@ -536,7 +536,7 @@ export function ProjectDetail({ project }: Props) {
                 <div className="h-3 w-3 rounded-full bg-amber-400" />
                 <div className="h-3 w-3 rounded-full bg-emerald-500" />
                 <div className="ml-4 text-xs font-black uppercase tracking-widest text-slate-500 truncate max-w-[60ch]">
-                  Google My Maps · {project.name} · {project.location}
+                  Plano interactivo · {project.name} · {project.location}
                 </div>
               </div>
             </div>
@@ -562,7 +562,7 @@ export function ProjectDetail({ project }: Props) {
                     Mapa próximamente
                   </div>
                   <p className="mt-3 max-w-md text-slate-600">
-                    Abraham está cargando el plano Google My Maps oficial de{" "}
+                    Abraham está cargando el plano interactivo oficial de{" "}
                     {project.shortName}. Mientras tanto, pide la ubicación por
                     WhatsApp.
                   </p>

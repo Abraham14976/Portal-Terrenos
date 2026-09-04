@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title:
     "Proyectos Inmobiliarios en Cajamarca · 10 Planos Oficiales | Portal Terrenos",
   description:
-    "Santa Margarita, Alameda La Colpa, La Finca, Planicies del Valle, Valle 4, 5, 6 y 7 + La Pirca. 10 proyectos de lotes urbanos y campestres en Cajamarca. 50-60 lotes por proyecto con planos interactivos Google My Maps.",
+    "Santa Margarita, Alameda La Colpa, La Finca, Planicies del Valle, Valle 4, 5, 6 y 7 + La Pirca. 10 proyectos de lotes urbanos y campestres en Cajamarca. Planos interactivos, inventario actualizado y asesoría personalizada de Abraham Portal.",
   keywords: [
     "proyectos inmobiliarios Cajamarca",
     "lotes Cajamarca",
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "10 Proyectos Inmobiliarios en Cajamarca | Portal Terrenos",
     description:
-      "Lotes desde S/ 57,000 soles. 10 proyectos, 600+ lotes. Plano Google My Maps de cada uno incluido. Asesoría de Abraham Portal.",
+      "10 proyectos residenciales en Cajamarca. Planos interactivos, lotes disponibles y asesoría personalizada de Abraham Saul Portal Garcia.",
   },
 };
 

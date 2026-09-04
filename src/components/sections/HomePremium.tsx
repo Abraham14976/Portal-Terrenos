@@ -140,18 +140,18 @@ export function HomePremium() {
                 <span>Cajamarca · #1 Portal Inmobiliario</span>
               </div>
               <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white drop-shadow-xl leading-[1.03]">
-                Tu lote en{" "}
+                Lotes y terrenos en{" "}
                 <span className="bg-gradient-to-r from-amber-200 via-amber-300 to-yellow-400 bg-clip-text text-transparent">
                   Cajamarca
                 </span>
                 <br />
-                desde{" "}
-                <span className="text-emerald-300">S/ 57,000 soles</span>
+                con título de propiedad limpio
               </h1>
               <p className="mt-6 text-lg md:text-xl text-white/85 leading-relaxed max-w-2xl">
                 {PROJECTS.length} proyectos residenciales. Urbanos y
-                campestres. Títulos de propiedad limpios. Planos interactivos
-                en Google My Maps. Asesoría personalizada de{" "}
+                campestres. Títulos de propiedad inscritos en Sunarp. Planos
+                interactivos y visitas guiadas todos los días. Asesoría
+                personalizada de{" "}
                 <strong className="text-amber-300">
                   Abraham Saul Portal Garcia
                 </strong>
@@ -749,9 +749,9 @@ export function HomePremium() {
                 Plano oficial · Demo
               </div>
               <h2 className="font-display text-3xl md:text-5xl font-black tracking-tight leading-[1.05]">
-                Plano interactivo tipo{" "}
+                Mapa interactivo de{" "}
                 <span className="bg-gradient-to-r from-amber-200 to-yellow-400 bg-clip-text text-transparent">
-                  Google My Maps
+                  lotes y calles
                 </span>{" "}
                 en cada proyecto
               </h2>
@@ -769,7 +769,7 @@ export function HomePremium() {
                   "Ver disponibilidad EN VIVO de cada lote",
                   "Zoom infinito, vista satelital y de calle",
                   "Abrir directamente Maps y enviar ubicación al cliente",
-                  "100% GRATIS para ti usando Google My Maps",
+                  "100% actualizado a tu disposición",
                 ].map((f) => (
                   <div
                     key={f}

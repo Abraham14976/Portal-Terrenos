@@ -47,7 +47,7 @@ const TIMELINE = [
   {
     year: "2022",
     title: "Lanzamiento oficial Portal Terrenos",
-    desc: "Nace Portal Terrenos con 10 proyectos en cartera y planos digitales de Google My Maps.",
+    desc: "Nace Portal Terrenos con 10 proyectos en cartera y planos digitales interactivos.",
     icon: Sparkles,
   },
   {
@@ -91,7 +91,7 @@ const CREDENTIALS = [
   "Miembro Cámara de Comercio Cajamarca",
   "Certificación Sunarp en Derechos Reales",
   "Asesor Verificado por +1000 clientes",
-  "Canal oficial Google My Maps + GeoLocal",
+  "Mapa interactivo oficial + GeoLocal",
 ];
 
 export function AboutPage() {

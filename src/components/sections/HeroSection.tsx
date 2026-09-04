@@ -8,10 +8,10 @@ import { siteConfig } from "@/config/site";
 import { LOTS_DATA } from "@/data/lots";
 
 const HERO_FEATURES = [
-  "Desde S/ 57,000 soles",
+  "Lotes desde 100 m² en Cajamarca",
   "10 proyectos en Cajamarca",
   "Documentos legales incluidos",
-  "Áreas de 120 - 180 m²",
+  "Áreas de 100 - 280 m²",
 ];
 
 export function HeroSection() {
@@ -221,7 +221,7 @@ export function HeroSection() {
             </div>
             <div>
               <p className="text-xs text-slate-500">Precio desde</p>
-              <p className="font-display text-lg font-bold text-slate-900">S/ 57,000 soles</p>
+              <p className="font-display text-lg font-bold text-slate-900">Consulta precio por WhatsApp</p>
             </div>
           </motion.div>
 

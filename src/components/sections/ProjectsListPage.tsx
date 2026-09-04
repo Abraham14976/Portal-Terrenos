@@ -72,7 +72,7 @@ export function ProjectsListPage() {
             </h1>
             <p className="mt-5 text-lg md:text-xl text-white/85 leading-relaxed max-w-2xl">
               {PROJECTS.length} proyectos residenciales. Urbanos, campestres y
-              mixtos. Cada uno con su plano de Google My Maps, inventario de
+              mixtos. Cada uno con su plano interactivo, inventario de
               lotes y asesoría personalizada de Abraham Saul Portal Garcia.
             </p>
             <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3 max-w-4xl">
