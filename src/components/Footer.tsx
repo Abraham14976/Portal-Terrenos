@@ -1,156 +1,204 @@
 "use client";
 
 import Link from "next/link";
-import { Map, Phone, Mail, MapPin, Facebook, Instagram, Linkedin } from "lucide-react";
+import { Map, Phone, Mail, MapPin, Facebook, Instagram, Linkedin, MessageCircle, ExternalLink, Building2 } from "lucide-react";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 import { trackEvent } from "@/lib/analytics";
 import { siteConfig } from "@/config/site";
+import { PROJECTS } from "@/data/projects";
 
 export function Footer() {
   return (
-    <footer id="contacto" className="relative overflow-hidden bg-slate-900 text-slate-300">
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-900 to-slate-950" />
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-500 via-gold-500 to-brand-500" />
+    <footer className="relative overflow-hidden bg-slate-950 text-slate-400">
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-950 to-[#04131f]" />
+      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#0f4c81] via-amber-400 to-[#0f4c81]" />
+      <div className="pointer-events-none absolute -left-40 top-20 h-72 w-72 rounded-full bg-[#0f4c81]/20 blur-3xl" />
+      <div className="pointer-events-none absolute -right-40 bottom-0 h-72 w-72 rounded-full bg-amber-500/10 blur-3xl" />
 
-      <div className="container-app relative py-16">
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
-          <div>
-            <div className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 text-white">
-                <Map className="h-5 w-5" />
+      <div className="container-app relative py-20">
+        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-12">
+          {/* BRAND */}
+          <div className="lg:col-span-4">
+            <div className="flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#0f4c81] to-[#1460a6] text-white shadow-lg shadow-[#0f4c81]/50">
+                <Map className="h-6 w-6" />
               </div>
-              <span className="font-display text-xl font-bold text-white">
-                {siteConfig.projectName}
-              </span>
+              <div>
+                <div className="font-display text-xl font-extrabold text-white tracking-tight">
+                  PORTAL TERRENOS
+                </div>
+                <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-amber-300/80">
+                  Abraham Saul Portal Garcia
+                </div>
+              </div>
             </div>
-            <p className="mt-4 text-sm leading-relaxed text-slate-400">
+            <p className="mt-5 text-sm leading-relaxed text-slate-400">
               {siteConfig.description}
             </p>
+
             <div className="mt-6 flex gap-3">
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-800 text-slate-400 transition-colors hover:bg-blue-600 hover:text-white"
-                aria-label="Facebook"
-              >
-                <Facebook className="h-5 w-5" />
-              </a>
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-800 text-slate-400 transition-colors hover:bg-pink-600 hover:text-white"
-                aria-label="Instagram"
-              >
-                <Instagram className="h-5 w-5" />
-              </a>
-              <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-800 text-slate-400 transition-colors hover:bg-blue-700 hover:text-white"
-                aria-label="LinkedIn"
-              >
-                <Linkedin className="h-5 w-5" />
-              </a>
+              {[
+                {
+                  href: "https://facebook.com",
+                  icon: Facebook,
+                  hover: "hover:bg-blue-600",
+                  label: "Facebook",
+                },
+                {
+                  href: "https://instagram.com",
+                  icon: Instagram,
+                  hover: "hover:bg-pink-600",
+                  label: "Instagram",
+                },
+                {
+                  href: "https://linkedin.com",
+                  icon: Linkedin,
+                  hover: "hover:bg-blue-700",
+                  label: "LinkedIn",
+                },
+              ].map((s) => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={s.label}
+                  className={`flex h-11 w-11 items-center justify-center rounded-2xl bg-white/5 text-slate-400 ring-1 ring-white/10 transition-all hover:text-white ${s.hover} hover:-translate-y-0.5 hover:shadow-xl`}
+                >
+                  <s.icon className="h-5 w-5" />
+                </a>
+              ))}
             </div>
           </div>
 
-          <div>
-            <h4 className="font-display text-base font-bold text-white">Navegación</h4>
-            <ul className="mt-5 space-y-3 text-sm">
-              {[
-                { label: "Inicio", href: "#inicio" },
-                { label: "Plano Interactivo", href: "#plano" },
-                { label: "Simulador Financiero", href: "#simulador" },
-                { label: "Sobre el Proyecto", href: "#proyecto" },
-                { label: "Asesoría", href: "#asesoria" },
-              ].map((item) => (
-                <li key={item.href}>
+          {/* PROYECTOS */}
+          <div className="lg:col-span-4">
+            <div className="flex items-center gap-2">
+              <Building2 className="h-4 w-4 text-amber-300" />
+              <h4 className="font-display text-sm font-black uppercase tracking-widest text-white">
+                Nuestros Proyectos
+              </h4>
+            </div>
+            <ul className="mt-5 grid grid-cols-2 gap-x-4 gap-y-2.5 text-sm">
+              {PROJECTS.slice(0, 10).map((p) => (
+                <li key={p.id}>
                   <Link
-                    href={item.href}
-                    className="text-slate-400 transition-colors hover:text-brand-400"
+                    href={`/proyectos/${p.slug}`}
+                    className="group inline-flex items-center gap-1.5 text-slate-400 transition-colors hover:text-amber-300"
                   >
-                    {item.label}
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#0f4c81] group-hover:bg-amber-300 transition-colors" />
+                    <span className="truncate">{p.shortName}</span>
                   </Link>
                 </li>
               ))}
             </ul>
-          </div>
-
-          <div>
-            <h4 className="font-display text-base font-bold text-white">Contacto</h4>
-            <ul className="mt-5 space-y-4 text-sm">
-              <li className="flex items-start gap-3">
-                <MapPin className="mt-0.5 h-5 w-5 flex-shrink-0 text-brand-400" />
-                <span className="text-slate-400">{siteConfig.address}</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Phone className="mt-0.5 h-5 w-5 flex-shrink-0 text-brand-400" />
-                <a
-                  href={`tel:${siteConfig.phone}`}
-                  className="text-slate-400 transition-colors hover:text-brand-400"
-                >
-                  {siteConfig.phone}
-                </a>
-              </li>
-              <li className="flex items-start gap-3">
-                <Mail className="mt-0.5 h-5 w-5 flex-shrink-0 text-brand-400" />
-                <a
-                  href={`mailto:${siteConfig.email}`}
-                  className="text-slate-400 transition-colors hover:text-brand-400"
-                >
-                  {siteConfig.email}
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-display text-base font-bold text-white">
-              ¿Tienes dudas?
-            </h4>
-            <p className="mt-4 text-sm text-slate-400">
-              Escríbenos directamente al WhatsApp y te atenderemos en menos de 5 minutos.
-            </p>
-            <a
-              href={buildWhatsAppLink(undefined, {
-                source: "footer",
-                campaign: "contacto_footer",
-              })}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-whatsapp mt-5 w-full"
-              onClick={() => {
-                trackEvent({
-                  name: "whatsapp_click",
-                  params: { button_location: "footer" },
-                });
-              }}
+            <Link
+              href="#proyectos-destacados"
+              className="mt-5 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#67b7f3] hover:text-amber-300 transition-colors"
             >
-              <Phone className="h-4 w-4" />
-              <span>Chatear por WhatsApp</span>
-            </a>
+              Ver todos los {PROJECTS.length} proyectos
+              <ExternalLink className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+
+          {/* CONTACTO */}
+          <div className="lg:col-span-4 space-y-6">
+            <div>
+              <div className="flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-amber-300" />
+                <h4 className="font-display text-sm font-black uppercase tracking-widest text-white">
+                  Contacto
+                </h4>
+              </div>
+              <ul className="mt-5 space-y-4 text-sm">
+                <li className="flex items-start gap-3">
+                  <span className="mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-white/5 text-amber-300 ring-1 ring-white/10">
+                    <MapPin className="h-4 w-4" />
+                  </span>
+                  <span>{siteConfig.address}</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <a
+                    href={`tel:${siteConfig.phone}`}
+                    className="group flex items-start gap-3 transition-all"
+                  >
+                    <span className="mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-white/5 text-[#67b7f3] ring-1 ring-white/10 group-hover:bg-emerald-600/20 group-hover:text-emerald-300">
+                      <Phone className="h-4 w-4" />
+                    </span>
+                    <div>
+                      <div className="text-xs text-slate-500">
+                        Llámanos al
+                      </div>
+                      <div className="font-bold text-white group-hover:text-emerald-300">
+                        {siteConfig.phone}
+                      </div>
+                    </div>
+                  </a>
+                </li>
+                <li className="flex items-start gap-3">
+                  <a
+                    href={`mailto:${siteConfig.email}`}
+                    className="group flex items-start gap-3"
+                  >
+                    <span className="mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-white/5 text-[#67b7f3] ring-1 ring-white/10 group-hover:bg-[#0f4c81]/30 group-hover:text-white">
+                      <Mail className="h-4 w-4" />
+                    </span>
+                    <div>
+                      <div className="text-xs text-slate-500">
+                        Escríbenos a
+                      </div>
+                      <div className="font-bold text-white group-hover:text-amber-300">
+                        {siteConfig.email}
+                      </div>
+                    </div>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div className="rounded-3xl bg-gradient-to-br from-[#0f4c81]/40 via-[#1460a6]/30 to-transparent p-5 ring-1 ring-white/10 backdrop-blur">
+              <div className="text-xs font-black uppercase tracking-widest text-amber-300">
+                Atención rápida
+              </div>
+              <div className="mt-1.5 text-base font-bold text-white leading-snug">
+                ¿Prefieres WhatsApp? Te respondemos en minutos.
+              </div>
+              <a
+                href={buildWhatsAppLink(undefined, {
+                  source: "footer",
+                  campaign: "contacto_footer",
+                })}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-whatsapp mt-4 w-full justify-center"
+                onClick={() => {
+                  trackEvent({
+                    name: "whatsapp_click",
+                    params: { button_location: "footer" },
+                  });
+                }}
+              >
+                <MessageCircle className="h-5 w-5" />
+                <span>Chatear por WhatsApp</span>
+              </a>
+            </div>
           </div>
         </div>
 
-        <div className="mt-16 border-t border-slate-800 pt-8">
-          <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-            <p className="text-xs text-slate-500">
-              © {new Date().getFullYear()} {siteConfig.name}. Todos los derechos reservados.
-            </p>
-            <div className="flex gap-6 text-xs text-slate-500">
-              <Link href="#" className="hover:text-slate-300">
-                Términos y Condiciones
-              </Link>
-              <Link href="#" className="hover:text-slate-300">
-                Política de Privacidad
-              </Link>
-              <Link href="#" className="hover:text-slate-300">
-                Libro de Reclamaciones
-              </Link>
-            </div>
+        <div className="mt-16 flex flex-col gap-4 border-t border-white/10 pt-8 md:flex-row md:items-center md:justify-between">
+          <p className="text-xs text-slate-500">
+            © {new Date().getFullYear()} {siteConfig.name}. Todos los derechos reservados. Hecho con 🇵🇪 por Abraham Saul Portal Garcia.
+          </p>
+          <div className="flex flex-wrap gap-5 text-xs text-slate-500">
+            <Link href="#" className="transition-colors hover:text-white">
+              Términos y Condiciones
+            </Link>
+            <Link href="#" className="transition-colors hover:text-white">
+              Política de Privacidad
+            </Link>
+            <Link href="#" className="transition-colors hover:text-white">
+              Libro de Reclamaciones
+            </Link>
           </div>
         </div>
       </div>

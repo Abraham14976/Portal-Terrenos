@@ -49,3 +49,7 @@ export function formatCurrencyDollars(amount: number): string {
 export function formatNumber(value: number): string {
   return new Intl.NumberFormat("es-PE").format(value);
 }
+
+export const formatPEN = formatCurrencySoles;
+export const formatUSD = formatCurrencyDollars;
+
