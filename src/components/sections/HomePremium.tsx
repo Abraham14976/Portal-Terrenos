@@ -1,105 +1,85 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
-  MapPin,
-  DollarSign,
-  Ruler,
-  Sparkles,
-  ShieldCheck,
+  BadgeCheck,
+  CheckCircle2,
   FileCheck2,
+  HeartHandshake,
+  LayoutGrid,
+  MapPin,
+  MessageCircle,
+  Phone,
+  ShieldCheck,
+  Sparkles,
+  Star,
+  TrendingUp,
+  Users,
+  Zap,
+  BookOpen,
   Award,
   Map,
-  Calculator,
-  Users,
-  Phone,
-  MessageCircle,
-  Star,
-  ExternalLink,
-  CheckCircle2,
-  TrendingUp,
-  BadgeCheck,
+  MessageSquareHeart,
+  ChevronRight,
+  Ruler,
 } from "lucide-react";
-import { buildWhatsAppLink, formatPEN, formatUSD } from "@/lib/whatsapp";
+import { buildWhatsAppLink, formatPEN } from "@/lib/whatsapp";
 import { trackEvent } from "@/lib/analytics";
-import { PROJECTS } from "@/data/projects";
+import { PROJECTS, Lot, formatPEN as formatPENLocal } from "@/data/projects";
 import { useState } from "react";
 import { saveLead } from "@/lib/supabase";
 
 const BENEFITS = [
   {
     icon: MapPin,
-    title: "Ubicaciones Estratégicas",
+    title: "Solo en Cajamarca",
     description:
-      "Lotes en zonas de alto crecimiento y plusvalía asegurada. Cercanía a servicios, colegios y vías de acceso principales.",
+      "10 proyectos en zonas estratégicas de alto crecimiento: Polloc, La Colpa, Valle, La Pirca y más. Toda la región cubierta.",
     color: "from-[#0f4c81] to-[#1460a6]",
   },
   {
     icon: ShieldCheck,
-    title: "Financiamiento Seguro y Directo",
+    title: "Trámites 100% seguros",
     description:
-      "Cuotas accesibles, tasas preferenciales y financiamiento propio. Sin intermediarios, sin sorpresas.",
+      "Títulos de propiedad, partidas registrales Sunarp, escrituras públicas. Documentación limpia y verificada antes de cualquier pago.",
     color: "from-emerald-600 to-emerald-700",
   },
   {
     icon: FileCheck2,
-    title: "Títulos de Propiedad Garantizados",
+    title: "Entrega inmediata",
     description:
-      "Escrituras públicas, partidas registrales individuales y todos los trámites legales listos. 100% seguro.",
-    color: "from-amber-600 to-amber-700",
-  },
-];
-
-const TESTIMONIOS = [
-  {
-    name: "Mariana Rojas",
-    role: "Inversionista · La Finca",
-    photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=faces",
-    stars: 5,
-    text: "Compré mi lote en La Finca hace un año y ya valorizó un 25%. El asesoramiento de Abraham fue de lo mejor. Totalmente recomendado.",
+      "Lotes listos para escriturar. No esperarás meses ni años: todo listo para que empieces a construir o invertir HOY.",
+    color: "from-amber-500 to-amber-700",
   },
   {
-    name: "Jorge Mendoza",
-    role: "Comprador · Santa Margarita",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=faces",
-    stars: 5,
-    text: "Mi familia y yo construimos nuestra casa soñada en Santa Margarita. Todo muy transparente, financiamiento súper flexible. ¡Gracias!",
-  },
-  {
-    name: "Patricia Campos",
-    role: "Inversionista · Valle 5",
-    photo: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=faces",
-    stars: 5,
-    text: "Invertí en 3 lotes de Valle 5 y ya tengo 2 alquilados. El ROI fue inmediato. Portal Terrenos es mi opción #1 para invertir en tierra.",
-  },
-  {
-    name: "David Palacios",
-    role: "Comprador · Alameda La Colpa",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=faces",
-    stars: 5,
-    text: "La piscina y las áreas sociales de Alameda La Colpa me impresionaron. Mis hijos están felices. ¡Excelente inversión!",
+    icon: HeartHandshake,
+    title: "Acompañamiento total",
+    description:
+      "Abraham Portal estará contigo de principio a fin. Llamadas, WhatsApp, visitas guiadas, asesoría jurídica y más.",
+    color: "from-rose-500 to-rose-700",
   },
 ];
 
 const STATS = [
+  { label: "Familias felices", value: "+900", icon: Users },
+  { label: "Proyectos en Cajamarca", value: `${PROJECTS.length}`, icon: LayoutGrid },
   { label: "Lotes vendidos", value: "+1,200", icon: BadgeCheck },
-  { label: "Proyectos entregados", value: `${PROJECTS.length}`, icon: Map },
-  { label: "Años de experiencia", value: "+15", icon: Award },
-  { label: "Clientes felices", value: "+900", icon: Users },
+  { label: "Años de confianza", value: "+15", icon: Award },
 ];
 
 export function HomePremium() {
-  const featured = PROJECTS.slice(0, 6);
+  const featured = PROJECTS.filter((p) =>
+    ["santa-margarita-polloc", "alameda-la-colpa", "la-finca", "valle-5", "valle-7", "la-pirca"].includes(p.slug)
+  );
   const [formState, setFormState] = useState<{
     name: string;
-    email: string;
     phone: string;
+    email: string;
     message: string;
     status: "idle" | "sending" | "ok" | "error";
-  }>({ name: "", email: "", phone: "", message: "", status: "idle" });
+  }>({ name: "", phone: "", email: "", message: "", status: "idle" });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -107,14 +87,14 @@ export function HomePremium() {
     setFormState((s) => ({ ...s, status: "sending" }));
     trackEvent({
       name: "lead_form_submit",
-      params: { source: "contacto_home", has_lot_code: false },
+      params: { source: "home_contacto_rapido", has_lot_code: false },
     });
     const res = await saveLead({
       name: formState.name,
       email: formState.email,
       phone: formState.phone,
       message: formState.message,
-      source: "contacto_home",
+      source: "home_contacto_rapido",
     });
     if (!res.error || res.skipped) {
       setFormState((s) => ({ ...s, status: "ok" }));
@@ -122,12 +102,12 @@ export function HomePremium() {
         () =>
           setFormState({
             name: "",
-            email: "",
             phone: "",
+            email: "",
             message: "",
             status: "idle",
           }),
-        4500
+        5000
       );
     } else {
       setFormState((s) => ({ ...s, status: "error" }));
@@ -135,162 +115,277 @@ export function HomePremium() {
   };
 
   return (
-    <main className="pt-20">
+    <main>
       {/* HERO */}
-      <section
-        id="inicio"
-        className="relative isolate overflow-hidden"
-      >
+      <section className="relative isolate overflow-hidden">
         <div className="absolute inset-0 -z-10">
           <img
-            src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=2000&h=1200&fit=crop"
-            alt="Terrenos urbanos residenciales"
+            src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=2200&h=1400&fit=crop"
+            alt="Lotes urbanos y campestres en Cajamarca"
             className="h-full w-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0f4c81]/90 via-[#0f4c81]/70 to-[#0b2e4c]/95" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0b2e4c]/85 via-[#0f4c81]/75 to-[#0b2e4c]/98" />
         </div>
 
         <div className="container-app relative py-24 md:py-36 lg:py-44">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="max-w-4xl text-center mx-auto"
-          >
-            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-white/90 backdrop-blur ring-1 ring-white/20 mb-6">
-              <Sparkles className="h-3.5 w-3.5 text-amber-300" />
-              <span>Tu inversión en terreno empieza aquí</span>
-            </div>
-            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white drop-shadow-xl leading-[1.05]">
-              CONSTRUYE TU SUEÑO
-              <br />
-              <span className="bg-gradient-to-r from-amber-200 via-amber-300 to-yellow-400 bg-clip-text text-transparent">
-                EN TU PROPIO TERRENO
-              </span>
-            </h1>
-            <p className="mx-auto mt-6 max-w-3xl text-lg md:text-xl text-white/90 leading-relaxed">
-              Lotes urbanos y campestres desde{" "}
-              <span className="font-extrabold text-amber-300">$15,000 USD</span>.
-              Financiamiento directo y seguro ·{" "}
-              {PROJECTS.length} proyectos en Lambayeque · Asesoría personalizada
-              de Abraham Saul Portal Garcia.
-            </p>
-            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <a
-                href="#proyectos-destacados"
-                onClick={() =>
-                  trackEvent({
-                    name: "cta_click",
-                    params: {
-                      cta_label: "Explorar lotes disponibles",
-                      cta_location: "hero",
-                    },
-                  })
-                }
-                className="group inline-flex items-center gap-3 rounded-2xl bg-white px-7 py-4 font-bold text-[#0f4c81] shadow-2xl shadow-black/20 transition-all hover:-translate-y-0.5 hover:bg-amber-300 hover:text-[#0b2e4c]"
-              >
-                <Map className="h-5 w-5" />
-                EXPLORAR LOTES DISPONIBLES
-                <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-              </a>
-              <a
-                href={buildWhatsAppLink(
-                  "Hola Abraham! Vi PORTAL TERRENOS y quiero cotizar un lote. ¿Cuáles tienen disponibilidad inmediata?",
-                  { source: "hero", medium: "website", campaign: "cotizar_hero" }
-                )}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 rounded-2xl border-2 border-white/40 bg-white/10 px-7 py-4 font-bold text-white backdrop-blur transition-all hover:-translate-y-0.5 hover:bg-white/20"
-                onClick={() =>
-                  trackEvent({
-                    name: "whatsapp_click",
-                    params: { button_location: "hero" },
-                  })
-                }
-              >
-                <MessageCircle className="h-5 w-5" />
-                COTIZAR POR WHATSAPP
-              </a>
-            </div>
-          </motion.div>
-
-          {/* STATS */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.25 }}
-            className="mx-auto mt-20 grid max-w-6xl grid-cols-2 gap-3 md:grid-cols-4 md:gap-4"
-          >
-            {STATS.map((s) => (
-              <div
-                key={s.label}
-                className="rounded-2xl border border-white/15 bg-white/5 p-5 backdrop-blur-md transition-all hover:bg-white/10"
-              >
-                <div className="flex items-center gap-2 text-amber-300">
-                  <s.icon className="h-5 w-5" />
-                </div>
-                <div className="mt-2 font-display text-3xl md:text-4xl font-black text-white">
-                  {s.value}
-                </div>
-                <div className="mt-1 text-xs md:text-sm font-medium text-white/70">
-                  {s.label}
-                </div>
+          <div className="grid lg:grid-cols-5 gap-12 items-start">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="lg:col-span-3 max-w-3xl"
+            >
+              <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-white/90 backdrop-blur ring-1 ring-white/20 mb-5">
+                <Sparkles className="h-3.5 w-3.5 text-amber-300" />
+                <span>Cajamarca · #1 Portal Inmobiliario</span>
               </div>
-            ))}
-          </motion.div>
+              <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white drop-shadow-xl leading-[1.03]">
+                Tu lote en{" "}
+                <span className="bg-gradient-to-r from-amber-200 via-amber-300 to-yellow-400 bg-clip-text text-transparent">
+                  Cajamarca
+                </span>
+                <br />
+                desde{" "}
+                <span className="text-emerald-300">S/ 57,000 soles</span>
+              </h1>
+              <p className="mt-6 text-lg md:text-xl text-white/85 leading-relaxed max-w-2xl">
+                {PROJECTS.length} proyectos residenciales. Urbanos y
+                campestres. Títulos de propiedad limpios. Planos interactivos
+                en Google My Maps. Asesoría personalizada de{" "}
+                <strong className="text-amber-300">
+                  Abraham Saul Portal Garcia
+                </strong>
+                , con +15 años ayudando a familias peruanas a construir su
+                patrimonio.
+              </p>
+
+              <div className="mt-9 flex flex-col sm:flex-row flex-wrap gap-4">
+                <Link
+                  href="/proyectos"
+                  onClick={() =>
+                    trackEvent({
+                      name: "cta_click",
+                      params: {
+                        cta_label: "Explorar 10 proyectos",
+                        cta_location: "hero",
+                      },
+                    })
+                  }
+                  className="group inline-flex items-center justify-center gap-3 rounded-2xl bg-white px-7 py-4 text-base font-black text-[#0f4c81] shadow-2xl shadow-black/20 transition-all hover:-translate-y-0.5 hover:bg-amber-300 hover:text-[#0b2e4c]"
+                >
+                  <LayoutGrid className="h-5 w-5" />
+                  EXPLORAR {PROJECTS.length} PROYECTOS
+                  <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                </Link>
+                <a
+                  href={buildWhatsAppLink(
+                    "Hola Abraham! Vi PORTAL TERRENOS y quiero que me recomiendes 3 proyectos. Mi presupuesto es de S/ ... , quiero (urbano/campestre) para (construir/invertir).",
+                    {
+                      source: "hero",
+                      medium: "website",
+                      campaign: "asesoria_inmediata",
+                    }
+                  )}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-3 rounded-2xl border-2 border-white/40 bg-white/10 px-7 py-4 text-base font-black text-white backdrop-blur transition-all hover:-translate-y-0.5 hover:bg-white/20"
+                  onClick={() =>
+                    trackEvent({
+                      name: "whatsapp_click",
+                      params: { button_location: "hero_wa" },
+                    })
+                  }
+                >
+                  <MessageCircle className="h-5 w-5" />
+                  ASESORÍA POR WHATSAPP
+                </a>
+              </div>
+
+              <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-3">
+                {STATS.map((s) => (
+                  <div
+                    key={s.label}
+                    className="rounded-2xl border border-white/15 bg-white/8 p-5 backdrop-blur hover:bg-white/15 transition-all"
+                  >
+                    <div className="flex items-center gap-2 text-amber-300">
+                      <s.icon className="h-5 w-5" />
+                    </div>
+                    <div className="mt-2 font-display text-3xl md:text-4xl font-black text-white leading-none">
+                      {s.value}
+                    </div>
+                    <div className="mt-2 text-[11px] md:text-xs font-semibold text-white/70 leading-tight">
+                      {s.label}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* FORMULARIO RÁPIDO HERO */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="lg:col-span-2"
+            >
+              <div className="relative">
+                <div className="absolute -inset-2 rounded-[2.5rem] bg-gradient-to-br from-amber-300/30 via-emerald-300/20 to-white/10 blur-xl" />
+                <form
+                  onSubmit={handleSubmit}
+                  className="relative rounded-3xl border border-white/15 bg-white/[0.97] p-7 md:p-8 backdrop-blur shadow-2xl shadow-black/15"
+                >
+                  <div className="inline-flex items-center gap-2 rounded-full bg-[#0f4c81]/10 px-3.5 py-1.5 text-[11px] font-black uppercase tracking-widest text-[#0f4c81] mb-4">
+                    <Zap className="h-3.5 w-3.5 text-amber-500" />
+                    Respuesta {"<"} 2 horas
+                  </div>
+                  <h3 className="font-display text-2xl md:text-3xl font-black tracking-tight text-slate-900 leading-tight">
+                    Cuéntame tu lote ideal
+                  </h3>
+                  <p className="mt-2 text-sm text-slate-500 font-semibold">
+                    Abraham te contacta personalmente.
+                  </p>
+
+                  <div className="mt-6 space-y-3.5">
+                    <input
+                      type="text"
+                      required
+                      placeholder="Tu nombre completo *"
+                      value={formState.name}
+                      onChange={(e) =>
+                        setFormState({ ...formState, name: e.target.value })
+                      }
+                      className="w-full rounded-2xl border-2 border-slate-200 bg-slate-50 px-4.5 py-3.5 pl-4 text-sm md:text-base font-semibold text-slate-900 placeholder:text-slate-400 focus:border-[#0f4c81] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#0f4c81]/10 transition-all"
+                    />
+                    <input
+                      type="tel"
+                      required
+                      placeholder="Tu WhatsApp / Celular *"
+                      value={formState.phone}
+                      onChange={(e) =>
+                        setFormState({ ...formState, phone: e.target.value })
+                      }
+                      className="w-full rounded-2xl border-2 border-slate-200 bg-slate-50 px-4.5 py-3.5 pl-4 text-sm md:text-base font-semibold text-slate-900 placeholder:text-slate-400 focus:border-[#0f4c81] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#0f4c81]/10 transition-all"
+                    />
+                    <input
+                      type="email"
+                      placeholder="Tu email (opcional)"
+                      value={formState.email}
+                      onChange={(e) =>
+                        setFormState({ ...formState, email: e.target.value })
+                      }
+                      className="w-full rounded-2xl border-2 border-slate-200 bg-slate-50 px-4.5 py-3.5 pl-4 text-sm md:text-base font-semibold text-slate-900 placeholder:text-slate-400 focus:border-[#0f4c81] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#0f4c81]/10 transition-all"
+                    />
+                    <textarea
+                      rows={3}
+                      placeholder="Cuéntame: ¿urbano o campestre? ¿Presupuesto aprox? ¿Proyecto que te llamó la atención?"
+                      value={formState.message}
+                      onChange={(e) =>
+                        setFormState({ ...formState, message: e.target.value })
+                      }
+                      className="w-full resize-none rounded-2xl border-2 border-slate-200 bg-slate-50 px-4 py-3.5 text-sm md:text-base font-semibold text-slate-900 placeholder:text-slate-400 focus:border-[#0f4c81] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#0f4c81]/10 transition-all"
+                    />
+                    <button
+                      type="submit"
+                      disabled={formState.status === "sending"}
+                      className="w-full rounded-2xl bg-gradient-to-r from-[#0f4c81] to-[#1460a6] px-5 py-4 text-sm md:text-base font-black uppercase tracking-wide text-white shadow-xl shadow-[#0f4c81]/25 transition-all hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-[#0f4c81]/30 disabled:opacity-70 disabled:hover:translate-y-0"
+                    >
+                      {formState.status === "sending"
+                        ? "Enviando consulta..."
+                        : formState.status === "ok"
+                        ? "✓ ¡Abraham te contactará pronto!"
+                        : formState.status === "error"
+                        ? "Error. Escríbenos por WhatsApp"
+                        : "Quiero que Abraham me contacte"}
+                    </button>
+                  </div>
+                  <div className="mt-5 grid grid-cols-2 gap-3">
+                    <a
+                      href={buildWhatsAppLink(
+                        "Hola Abraham! Te escribo desde el HOME. Quiero información de tus proyectos en Cajamarca.",
+                        { source: "hero_form_wa", medium: "website" }
+                      )}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-whatsapp !py-3 !text-xs md:!text-sm justify-center"
+                      onClick={() =>
+                        trackEvent({
+                          name: "whatsapp_click",
+                          params: { button_location: "hero_form_wa" },
+                        })
+                      }
+                    >
+                      <MessageCircle className="h-4 w-4 md:h-5 md:w-5" />
+                      WhatsApp
+                    </a>
+                    <a
+                      href="tel:+51926301972"
+                      className="inline-flex items-center justify-center gap-2 rounded-2xl border-2 border-slate-200 bg-white px-4 py-3 text-xs md:text-sm font-black uppercase tracking-wide text-slate-700 hover:border-[#0f4c81] hover:text-[#0f4c81] transition-all"
+                    >
+                      <Phone className="h-4 w-4 md:h-5 md:w-5" />
+                      Llamar
+                    </a>
+                  </div>
+                </form>
+              </div>
+            </motion.div>
+          </div>
         </div>
 
-        {/* WAVE SEPARATOR */}
+        {/* WAVE */}
         <div className="absolute bottom-0 left-0 right-0 -z-0">
           <svg viewBox="0 0 1440 120" className="w-full" preserveAspectRatio="none">
             <path
               fill="#ffffff"
-              d="M0,64 C360,112 720,0 1080,64 C1260,96 1380,80 1440,64 L1440,120 L0,120 Z"
+              d="M0,64 C360,112 720,10 1080,72 C1240,104 1340,80 1440,64 L1440,120 L0,120 Z"
             />
           </svg>
         </div>
       </section>
 
       {/* BENEFICIOS */}
-      <section id="beneficios" className="py-20 md:py-28 bg-white">
+      <section className="py-20 md:py-28 bg-white">
         <div className="container-app">
           <div className="mx-auto max-w-3xl text-center">
-            <div className="inline-flex items-center gap-2 rounded-full bg-[#0f4c81]/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-[#0f4c81] mb-4">
-              ¿Por qué elegirnos?
+            <div className="inline-flex items-center gap-2 rounded-full bg-[#0f4c81]/10 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-[#0f4c81] mb-4">
+              ¿Por qué Portal Terrenos?
             </div>
-            <h2 className="font-display text-3xl md:text-5xl font-black tracking-tight text-slate-900">
-              ¿Por Qué Elegir{" "}
+            <h2 className="font-display text-3xl md:text-5xl font-black tracking-tight text-slate-900 leading-tight">
+              Invertir en Cajamarca{" "}
               <span className="bg-gradient-to-r from-[#0f4c81] to-[#1460a6] bg-clip-text text-transparent">
-                Portal Terrenos?
+                nunca fue tan seguro
               </span>
             </h2>
-            <p className="mt-4 text-lg text-slate-600">
-              Más de 15 años conectando familias peruanas con su patrimonio.
-              Transparencia, seguridad y resultados comprobados.
+            <p className="mt-5 text-lg text-slate-600 leading-relaxed">
+              4 pilares que nos diferencian del resto. Más de 900 familias en
+              Cajamarca ya lo confirmaron.
             </p>
           </div>
 
-          <div className="mt-16 grid gap-6 md:grid-cols-3">
-            {BENEFITS.map((b) => (
+          <div className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {BENEFITS.map((b, i) => (
               <motion.div
                 key={b.title}
-                whileHover={{ y: -6 }}
-                className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-8 shadow-sm transition-all hover:shadow-2xl hover:shadow-slate-900/5"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.06 }}
+                whileHover={{ y: -8 }}
+                className="group relative flex flex-col overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-7 shadow-sm transition-all hover:shadow-2xl hover:shadow-slate-900/10"
               >
                 <div
-                  className={`mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${b.color} text-white shadow-lg`}
+                  className={`mb-6 inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br ${b.color} text-white shadow-xl`}
                 >
                   <b.icon className="h-8 w-8" />
                 </div>
-                <h3 className="font-display text-xl font-bold text-slate-900">
+                <h3 className="font-display text-xl font-black text-slate-900">
                   {b.title}
                 </h3>
-                <p className="mt-3 text-slate-600 leading-relaxed">
-                  {b.description}
-                </p>
-                <div className="mt-6 flex items-center gap-2 text-sm font-bold text-[#0f4c81]">
-                  <CheckCircle2 className="h-4 w-4" />
-                  Garantía Portal Terrenos
+                <p className="mt-3 text-slate-600 leading-relaxed">{b.description}</p>
+                <div className="mt-6 pt-6 border-t border-slate-200/70 flex items-center justify-between">
+                  <div className="text-[11px] font-black uppercase tracking-widest text-slate-400">
+                    Garantía Portal Terrenos
+                  </div>
+                  <CheckCircle2 className="h-5 w-5 text-emerald-500" />
                 </div>
               </motion.div>
             ))}
@@ -299,37 +394,43 @@ export function HomePremium() {
       </section>
 
       {/* PROYECTOS DESTACADOS */}
-      <section
-        id="proyectos-destacados"
-        className="py-20 md:py-28 bg-gradient-to-b from-slate-50 to-white"
-      >
+      <section className="py-20 md:py-28 bg-gradient-to-b from-slate-50 to-white border-y border-slate-200">
         <div className="container-app">
-          <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14">
             <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 rounded-full bg-amber-100 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-amber-800 mb-4">
-                <TrendingUp className="h-3.5 w-3.5" />
-                Nuestra cartera
+              <div className="inline-flex items-center gap-2 rounded-full bg-amber-100 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-amber-800 mb-4">
+                <LayoutGrid className="h-3.5 w-3.5" />
+                Proyectos destacados
               </div>
-              <h2 className="font-display text-3xl md:text-5xl font-black tracking-tight text-slate-900">
-                Explora Nuestros{" "}
-                <span className="text-[#0f4c81]">Proyectos</span>
+              <h2 className="font-display text-3xl md:text-5xl font-black tracking-tight text-slate-900 leading-tight">
+                Los proyectos más buscados en{" "}
+                <span className="text-[#0f4c81]">Cajamarca</span>
               </h2>
               <p className="mt-4 text-lg text-slate-600">
-                {PROJECTS.length} proyectos residenciales. Cada uno con su plano
-                de Google My Maps, lotes disponibles, financiamiento y
-                asesoramiento de Abraham.
+                Cada proyecto incluye su plano interactivo oficial en Google
+                My Maps, inventario de lotes ACTUALIZADO y WhatsApp directo
+                con Abraham.
               </p>
             </div>
             <Link
-              href="#todos-proyectos"
-              className="inline-flex items-center gap-2 rounded-xl border-2 border-[#0f4c81]/20 bg-white px-5 py-3 font-bold text-[#0f4c81] transition-all hover:border-[#0f4c81] hover:bg-[#0f4c81]/5"
+              href="/proyectos"
+              className="inline-flex items-center gap-2 self-start md:self-end rounded-2xl bg-[#0f4c81] px-6 py-4 text-sm font-black uppercase tracking-wider text-white shadow-lg shadow-[#0f4c81]/25 transition-all hover:-translate-y-0.5 hover:bg-[#1460a6] hover:shadow-xl"
+              onClick={() =>
+                trackEvent({
+                  name: "cta_click",
+                  params: {
+                    cta_label: "Ver todos proyectos home",
+                    cta_location: "home_proyectos_btn",
+                  },
+                })
+              }
             >
               Ver {PROJECTS.length} proyectos
-              <ArrowRight className="h-5 w-5" />
+              <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
 
-          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
             {featured.map((p, idx) => {
               const pct = Math.round(
                 ((p.totalLots - p.availableLots) / p.totalLots) * 100
@@ -340,8 +441,8 @@ export function HomePremium() {
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: idx * 0.06 }}
-                  whileHover={{ y: -6 }}
+                  transition={{ duration: 0.4, delay: idx * 0.05 }}
+                  whileHover={{ y: -8 }}
                   className="group flex flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-all hover:shadow-2xl hover:shadow-slate-900/10"
                 >
                   <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
@@ -349,120 +450,134 @@ export function HomePremium() {
                       src={p.heroImage}
                       alt={p.name}
                       className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      loading="lazy"
                     />
-                    <div className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full bg-white/95 px-3 py-1.5 text-xs font-bold text-[#0f4c81] shadow-md">
-                      <MapPin className="h-3.5 w-3.5" />
-                      {p.location} · {p.region}
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/0 to-transparent" />
+                    <div className="absolute left-4 top-4 flex flex-wrap gap-2">
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-white/95 backdrop-blur px-3 py-1.5 text-[11px] font-black uppercase text-[#0f4c81] shadow-md ring-1 ring-black/5">
+                        <MapPin className="h-3.5 w-3.5" />
+                        {p.location}
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-900/80 backdrop-blur px-3 py-1.5 text-[11px] font-black uppercase text-white shadow-md">
+                        {p.type}
+                      </span>
                     </div>
-                    <div className="absolute right-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-emerald-600 px-3 py-1.5 text-xs font-black uppercase text-white shadow-md">
-                      <DollarSign className="h-3.5 w-3.5" />
-                      DESDE ${p.minPrice.toLocaleString()}
+                    <div className="absolute right-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-emerald-600 px-4 py-2 text-xs font-black uppercase text-white shadow-xl">
+                      desde {formatPENLocal(p.minPrice)}
                     </div>
-                    <div className="absolute bottom-4 left-4 right-4">
-                      <div className="flex items-center justify-between text-[11px] font-bold text-white/90 mb-1.5">
-                        <span>Vendido</span>
-                        <span>{pct}% · {p.totalLots - p.availableLots} / {p.totalLots}</span>
+                    <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-4">
+                      <div className="min-w-0">
+                        <div className="text-[11px] font-black uppercase tracking-widest text-white/60">
+                          Proyecto
+                        </div>
+                        <h3 className="font-display text-2xl font-black text-white leading-tight drop-shadow-lg truncate">
+                          {p.shortName}
+                        </h3>
                       </div>
-                      <div className="h-2 overflow-hidden rounded-full bg-white/30 backdrop-blur">
-                        <div
-                          className="h-full rounded-full bg-gradient-to-r from-amber-300 via-amber-400 to-yellow-500"
-                          style={{ width: `${pct}%` }}
-                        />
+                      <div className="w-24 flex-shrink-0">
+                        <div className="flex justify-between text-[10px] font-black uppercase text-white/80 mb-1.5">
+                          <span>Ocupación</span>
+                          <span>{pct}%</span>
+                        </div>
+                        <div className="h-2.5 overflow-hidden rounded-full bg-white/30 backdrop-blur">
+                          <div
+                            className="h-full rounded-full bg-gradient-to-r from-amber-300 to-yellow-400 shadow"
+                            style={{ width: `${pct}%` }}
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
 
                   <div className="flex flex-1 flex-col p-6">
-                    <h3 className="font-display text-xl font-bold text-slate-900 group-hover:text-[#0f4c81]">
-                      {p.name}
-                    </h3>
-                    <p className="mt-2 text-sm text-slate-600 line-clamp-2">
+                    <div className="flex items-center justify-between gap-3">
+                      <h4 className="font-display text-lg md:text-xl font-black text-slate-900 group-hover:text-[#0f4c81] transition-colors truncate">
+                        {p.name}
+                      </h4>
+                      <BadgeCheck className="h-5 w-5 flex-shrink-0 text-[#0f4c81]" />
+                    </div>
+                    <p className="mt-2 text-sm text-slate-500 font-semibold line-clamp-2">
                       {p.tagline}
                     </p>
 
                     <div className="mt-5 grid grid-cols-3 gap-2">
-                      <div className="rounded-xl bg-slate-50 p-3 text-center">
-                        <div className="flex justify-center text-[#0f4c81]">
-                          <Ruler className="h-4 w-4" />
-                        </div>
-                        <div className="mt-1 font-display text-xs font-bold text-slate-900">
-                          {p.minArea} - {p.maxArea}m²
-                        </div>
-                      </div>
-                      <div className="rounded-xl bg-slate-50 p-3 text-center">
-                        <div className="flex justify-center text-[#0f4c81]">
-                          <Map className="h-4 w-4" />
-                        </div>
-                        <div className="mt-1 font-display text-xs font-bold text-slate-900">
-                          {p.totalLots} lotes
-                        </div>
-                      </div>
-                      <div className="rounded-xl bg-slate-50 p-3 text-center">
-                        <div className="flex justify-center text-emerald-600">
-                          <CheckCircle2 className="h-4 w-4" />
-                        </div>
-                        <div className="mt-1 font-display text-xs font-bold text-slate-900">
-                          {p.availableLots} disp.
-                        </div>
-                      </div>
+                      <MiniStat
+                        icon={<Ruler className="h-4 w-4" />}
+                        value={`${p.minArea}-${p.maxArea}`}
+                        label="m²"
+                        color="[#0f4c81]"
+                      />
+                      <MiniStat
+                        icon={<LayoutGrid className="h-4 w-4" />}
+                        value={`${p.totalLots}`}
+                        label="Lotes"
+                        color="indigo-600"
+                      />
+                      <MiniStat
+                        icon={<CheckCircle2 className="h-4 w-4" />}
+                        value={`${p.availableLots}`}
+                        label="Disp."
+                        color="emerald-600"
+                      />
                     </div>
 
-                    <div className="mt-5 flex items-center flex-wrap gap-1.5">
-                      {p.amenities.slice(0, 3).map((a) => (
+                    <div className="mt-5 flex flex-wrap gap-1.5">
+                      {p.amenities.slice(0, 4).map((a) => (
                         <span
                           key={a}
-                          className="rounded-md bg-[#0f4c81]/5 px-2 py-1 text-[11px] font-semibold text-[#0f4c81]"
+                          className="rounded-lg bg-slate-50 border border-slate-200 px-2.5 py-1 text-[11px] font-bold text-slate-700"
                         >
                           {a}
                         </span>
                       ))}
-                      {p.amenities.length > 3 && (
-                        <span className="rounded-md bg-slate-100 px-2 py-1 text-[11px] font-semibold text-slate-600">
-                          +{p.amenities.length - 3}
+                      {p.amenities.length > 4 && (
+                        <span className="rounded-lg bg-[#0f4c81]/10 px-2.5 py-1 text-[11px] font-black uppercase text-[#0f4c81]">
+                          +{p.amenities.length - 4}
                         </span>
                       )}
                     </div>
 
-                    <div className="mt-6 flex gap-3 pt-4 border-t border-slate-100">
+                    <div className="mt-6 grid grid-cols-5 gap-2 pt-6 border-t border-slate-100">
                       <Link
                         href={`/proyectos/${p.slug}`}
-                        className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-[#0f4c81] px-4 py-3 text-sm font-bold text-white transition-all hover:bg-[#1460a6] hover:shadow-lg hover:shadow-[#0f4c81]/25"
+                        className="col-span-3 inline-flex items-center justify-center gap-2 rounded-2xl bg-[#0f4c81] px-4 py-3.5 text-xs md:text-sm font-black uppercase tracking-wider text-white shadow-lg shadow-[#0f4c81]/25 transition-all hover:-translate-y-0.5 hover:bg-[#1460a6] hover:shadow-xl"
                         onClick={() =>
                           trackEvent({
                             name: "cta_click",
                             params: {
                               cta_label: `Ver proyecto ${p.name}`,
-                              cta_location: "destacados",
+                              cta_location: "home_featured",
                             },
                           })
                         }
                       >
-                        Ver Detalles
-                        <ArrowRight className="h-4 w-4" />
+                        Ver proyecto
+                        <ChevronRight className="h-4 w-4" />
                       </Link>
                       <a
                         href={buildWhatsAppLink(
-                          `Hola Abraham! Estoy interesado/a en el proyecto ${p.name}. ¿Tienes lotes disponibles?`,
+                          `Hola Abraham! Estoy interesado en ${p.name} (${p.location}, Cajamarca). ${p.availableLots} lotes disponibles de ${p.minArea}-${p.maxArea}m². ¿Tienes promoción esta semana?`,
                           {
-                            source: `proyecto_${p.slug}`,
+                            source: `home_proyecto_${p.slug}`,
                             medium: "website",
-                            campaign: "card_proyecto",
+                            campaign: `home_featured_whatsapp`,
+                            content: p.id,
                           }
                         )}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-[#0f4c81]/20 px-4 py-3 text-sm font-bold text-[#0f4c81] transition-all hover:border-[#0f4c81] hover:bg-[#0f4c81]/5"
+                        className="col-span-2 inline-flex items-center justify-center gap-2 rounded-2xl border-2 border-[#0f4c81]/15 bg-[#0f4c81]/[0.04] px-3 py-3.5 text-[11px] md:text-xs font-black uppercase tracking-wider text-[#0f4c81] transition-all hover:border-emerald-500/60 hover:bg-emerald-500 hover:text-white"
                         onClick={() =>
                           trackEvent({
                             name: "whatsapp_click",
                             params: {
-                              button_location: `proyecto_card_${p.slug}`,
+                              button_location: `home_featured_wa_${p.slug}`,
                             },
                           })
                         }
-                        aria-label="WhatsApp"
                       >
-                        <MessageCircle className="h-5 w-5" />
+                        <MessageCircle className="h-4 w-4" />
+                        WhatsApp
                       </a>
                     </div>
                   </div>
@@ -471,397 +586,252 @@ export function HomePremium() {
             })}
           </div>
 
-          {/* RESTO DE PROYECTOS compactos */}
-          <div id="todos-proyectos" className="mt-16">
-            <div className="mb-8">
-              <h3 className="font-display text-2xl md:text-3xl font-bold text-slate-900">
-                Todos los Proyectos ({PROJECTS.length})
-              </h3>
-              <p className="mt-2 text-slate-600">
-                Haz clic en cualquier tarjeta para ver su plano de Google My
-                Maps y su disponibilidad actual.
-              </p>
+          <div className="mt-14 md:hidden">
+            <Link
+              href="/proyectos"
+              className="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-slate-900 px-6 py-4 text-sm font-black uppercase tracking-wide text-white transition-all hover:bg-slate-800"
+            >
+              <LayoutGrid className="h-5 w-5" />
+              Ver {PROJECTS.length} proyectos en Cajamarca
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA NOSOTROS + TESTIMONIOS PREVIEW */}
+      <section className="py-20 md:py-28 bg-white">
+        <div className="container-app grid gap-12 lg:grid-cols-12 items-center">
+          <div className="lg:col-span-7 relative order-2 lg:order-1">
+            <div className="absolute -top-10 -left-10 h-72 w-72 rounded-full bg-[#0f4c81]/10 blur-3xl" />
+            <div className="absolute -bottom-16 -right-10 h-80 w-80 rounded-full bg-amber-300/15 blur-3xl" />
+            <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl shadow-slate-900/10 aspect-[5/4]">
+              <img
+                src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=1000&h=800&fit=crop"
+                alt="Abraham Saul Portal Garcia - Asesor Inmobiliario Cajamarca"
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src =
+                    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=1000&h=800&fit=crop";
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
+              <div className="absolute left-5 right-5 bottom-5 rounded-2xl bg-white/95 backdrop-blur p-5 shadow-xl border border-white/50">
+                <div className="flex items-center gap-4">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#0f4c81] to-[#1460a6] text-white shadow-lg">
+                    <Award className="h-7 w-7" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="font-display text-xl font-black text-slate-900">
+                      Abraham Saul Portal Garcia
+                    </div>
+                    <div className="text-sm font-bold text-[#0f4c81]">
+                      Asesor Inmobiliario · Cajamarca
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4 grid grid-cols-3 gap-3">
+                  <div>
+                    <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                      Experiencia
+                    </div>
+                    <div className="mt-0.5 font-display text-xl font-black text-slate-900">
+                      +15 años
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                      Clientes
+                    </div>
+                    <div className="mt-0.5 font-display text-xl font-black text-emerald-600">
+                      +900
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                      Rating
+                    </div>
+                    <div className="mt-0.5 flex items-center gap-1">
+                      <div className="font-display text-xl font-black text-slate-900">
+                        5.0
+                      </div>
+                      <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {PROJECTS.slice(6).map((p) => (
-                <Link
-                  key={p.id}
-                  href={`/proyectos/${p.slug}`}
-                  className="group flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 transition-all hover:-translate-y-0.5 hover:border-[#0f4c81]/30 hover:bg-[#0f4c81]/[0.02] hover:shadow-md"
+          </div>
+
+          <div className="lg:col-span-5 order-1 lg:order-2">
+            <div className="inline-flex items-center gap-2 rounded-full bg-amber-100 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-amber-800 mb-4">
+              <MessageSquareHeart className="h-3.5 w-3.5" />
+              Testimonios + Trayectoria
+            </div>
+            <h2 className="font-display text-3xl md:text-5xl font-black tracking-tight text-slate-900 leading-[1.05]">
+              Más de 15 años construyendo{" "}
+              <span className="bg-gradient-to-r from-[#0f4c81] to-[#1460a6] bg-clip-text text-transparent">
+                sueños en Cajamarca
+              </span>
+            </h2>
+            <p className="mt-5 text-lg text-slate-600 leading-relaxed">
+              Conoce a Abraham, lee las experiencias de quienes ya confiaron y
+              descubre por qué somos la opción N°1 en lotes de la región.
+            </p>
+
+            <div className="mt-7 space-y-4">
+              {[
+                "Títulos de propiedad individuales y verificados en Sunarp",
+                "+600 lotes entregados inmediatamente, sin demoras",
+                "Respuesta por WhatsApp en menos de 2 horas",
+                "Visitas guiadas SÍ o SÍ en cada proyecto",
+              ].map((x) => (
+                <div
+                  key={x}
+                  className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-gradient-to-r from-white to-slate-50 p-4"
                 >
-                  <div className="relative h-16 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-gradient-to-br from-[#0f4c81] to-[#1460a6]">
-                    <img
-                      src={p.heroImage}
-                      alt={p.name}
-                      className="h-full w-full object-cover opacity-90 group-hover:scale-110 transition-transform"
-                    />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="truncate font-bold text-slate-900 group-hover:text-[#0f4c81]">
-                      {p.name}
-                    </div>
-                    <div className="truncate text-xs text-slate-500">
-                      {p.region} · {p.location} · {p.totalLots} lotes
-                    </div>
-                    <div className="mt-1 flex items-center gap-2 text-xs">
-                      <span className="font-black text-[#0f4c81]">
-                        ${p.minPrice.toLocaleString()}
-                      </span>
-                      <span className="text-slate-400">·</span>
-                      <span className="font-semibold text-emerald-600">
-                        {p.availableLots} disp.
-                      </span>
-                    </div>
-                  </div>
-                  <ArrowRight className="h-4 w-4 flex-shrink-0 text-slate-300 group-hover:text-[#0f4c81] group-hover:translate-x-1 transition-all" />
-                </Link>
+                  <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-500" />
+                  <span className="font-bold text-slate-700 leading-snug">
+                    {x}
+                  </span>
+                </div>
               ))}
+            </div>
+
+            <div className="mt-9 flex flex-col sm:flex-row flex-wrap gap-3">
+              <Link
+                href="/nosotros"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-slate-900 px-6 py-4 text-sm font-black uppercase tracking-wide text-white shadow-lg shadow-slate-900/20 transition-all hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-xl"
+                onClick={() =>
+                  trackEvent({
+                    name: "cta_click",
+                    params: {
+                      cta_label: "Conocer a Abraham",
+                      cta_location: "home_nosotros",
+                    },
+                  })
+                }
+                >
+                  <BookOpen className="h-5 w-5" />
+                  Conoce a Abraham
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              <Link
+                href="/testimonios"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border-2 border-[#0f4c81]/20 bg-[#0f4c81]/5 px-6 py-4 text-sm font-black uppercase tracking-wide text-[#0f4c81] transition-all hover:border-[#0f4c81]/50 hover:bg-[#0f4c81]/10 hover:-translate-y-0.5"
+                onClick={() =>
+                  trackEvent({
+                    name: "cta_click",
+                    params: {
+                      cta_label: "Ver 900 testimonios",
+                      cta_location: "home_testimonios",
+                    },
+                  })
+                }
+                >
+                  <Users className="h-5 w-5" />
+                  +900 testimonios
+                </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* FINANCIAMIENTO */}
-      <section
-        id="financiamiento"
-        className="py-20 md:py-28 bg-gradient-to-br from-[#0f4c81] via-[#1460a6] to-[#0b2e4c] text-white relative overflow-hidden"
-      >
-        <div className="absolute inset-0 opacity-10 pointer-events-none">
-          <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-amber-300 blur-3xl" />
-          <div className="absolute -bottom-32 -left-32 h-[500px] w-[500px] rounded-full bg-emerald-400 blur-3xl" />
-        </div>
-
+      {/* MAPA DEMO + CTA CONTACTO */}
+      <section className="py-20 md:py-28 bg-gradient-to-br from-[#0f4c81] via-[#1460a6] to-[#0b2e4c] text-white relative overflow-hidden">
+        <div className="pointer-events-none absolute -left-32 top-0 h-96 w-96 rounded-full bg-amber-400/20 blur-3xl" />
+        <div className="pointer-events-none absolute right-0 bottom-0 h-[500px] w-[500px] rounded-full bg-emerald-400/10 blur-3xl" />
         <div className="container-app relative">
-          <div className="grid gap-12 lg:grid-cols-2 items-center">
-            <div>
-              <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-white/90 ring-1 ring-white/20 mb-4">
-                <Calculator className="h-3.5 w-3.5" />
-                Sin letra chica
+          <div className="grid gap-10 lg:grid-cols-12 items-center">
+            <div className="lg:col-span-5">
+              <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-black uppercase tracking-widest ring-1 ring-white/20 mb-4">
+                <Map className="h-3.5 w-3.5 text-emerald-300" />
+                Plano oficial · Demo
               </div>
-              <h2 className="font-display text-3xl md:text-5xl font-black leading-tight">
-                Financiamiento{" "}
+              <h2 className="font-display text-3xl md:text-5xl font-black tracking-tight leading-[1.05]">
+                Plano interactivo tipo{" "}
                 <span className="bg-gradient-to-r from-amber-200 to-yellow-400 bg-clip-text text-transparent">
-                  directo y flexible
-                </span>
-                , tú eliges cómo pagar.
+                  Google My Maps
+                </span>{" "}
+                en cada proyecto
               </h2>
-              <p className="mt-6 text-lg text-white/85 leading-relaxed">
-                En Portal Terrenos creemos en la inclusión financiera. Por eso
-                diseñamos planes de pago adaptados a tu economía, con tasas
-                preferenciales, cuotas fijas en soles o dólares, y sin
-                intermediarios.
+              <p className="mt-5 text-lg md:text-xl text-white/85 leading-relaxed">
+                Este es el tipo de plano interactivo que tendrá{" "}
+                <strong className="text-amber-300">
+                  cada uno de tus {PROJECTS.length} proyectos
+                </strong>
+                . Fácil de navegar para el cliente, lotes exactos,
+                coordenadas y calles 100% a escala.
               </p>
 
-              <ul className="mt-8 space-y-4">
+              <div className="mt-8 space-y-3">
                 {[
-                  "✅ Inicial desde 10% en proyectos seleccionados",
-                  "✅ Plazo hasta 96 meses (8 años)",
-                  "✅ Cuotas fijas, sin sorpresas ni recargos",
-                  "✅ Tasa preferencial desde 1.1% mensual",
-                  "✅ Opción soles o dólares (la que prefieras)",
-                  "✅ Pre-evaluación inmediata por WhatsApp",
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-3 text-white/90">
-                    <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-amber-300" />
-                    <span className="font-medium">{item}</span>
-                  </li>
+                  "Ver disponibilidad EN VIVO de cada lote",
+                  "Zoom infinito, vista satelital y de calle",
+                  "Abrir directamente Maps y enviar ubicación al cliente",
+                  "100% GRATIS para ti usando Google My Maps",
+                ].map((f) => (
+                  <div
+                    key={f}
+                    className="flex items-start gap-3 rounded-2xl bg-white/5 border border-white/10 p-4 backdrop-blur"
+                  >
+                    <TrendingUp className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-300" />
+                    <span className="font-bold text-white/90 leading-snug">
+                      {f}
+                    </span>
+                  </div>
                 ))}
-              </ul>
+              </div>
 
-              <div className="mt-10 flex flex-wrap gap-4">
-                <a
-                  href={buildWhatsAppLink(
-                    "Hola Abraham! Quiero una pre-evaluación de financiamiento para comprar mi lote. ¿Cuáles son los planes?",
-                    { source: "financiamiento", medium: "website", campaign: "simulador_home" }
-                  )}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-3 rounded-2xl bg-amber-300 px-7 py-4 font-extrabold text-[#0b2e4c] shadow-2xl shadow-black/20 transition-all hover:-translate-y-0.5 hover:bg-amber-200"
+              <div className="mt-9 flex flex-wrap gap-3">
+                <Link
+                  href="/contacto"
+                  className="inline-flex items-center gap-3 rounded-2xl bg-amber-300 px-7 py-4 text-base font-black uppercase tracking-wide text-[#0b2e4c] shadow-xl shadow-black/20 transition-all hover:-translate-y-0.5 hover:bg-amber-200"
                   onClick={() =>
                     trackEvent({
                       name: "cta_click",
                       params: {
-                        cta_label: "Solicitar pre-evaluación",
-                        cta_location: "financiamiento_home",
+                        cta_label: "Agendar visita guiada",
+                        cta_location: "home_mapa_cta",
                       },
                     })
                   }
                 >
-                  <Calculator className="h-5 w-5" />
-                  SOLICITAR PRE-EVALUACIÓN
-                </a>
+                  <MapPin className="h-5 w-5" />
+                  Agendar visita guiada
+                </Link>
+                <Link
+                  href="/proyectos/santa-margarita-polloc"
+                  className="inline-flex items-center gap-3 rounded-2xl border-2 border-white/30 bg-white/10 px-7 py-4 text-sm md:text-base font-black uppercase tracking-wide text-white backdrop-blur transition-all hover:-translate-y-0.5 hover:bg-white/20"
+                >
+                  Ver demo plano real
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
               </div>
             </div>
 
-            <motion.div
-              initial={{ opacity: 0, scale: 0.96 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="relative"
-            >
-              <div className="absolute -inset-2 rounded-[2rem] bg-gradient-to-r from-amber-300/40 via-emerald-300/30 to-white/10 blur-xl" />
-              <div className="relative rounded-3xl border border-white/15 bg-white/10 p-7 backdrop-blur-xl">
-                <div className="flex items-center justify-between">
-                  <div className="font-display text-lg font-bold">
-                    Simulador rápido
-                  </div>
-                  <div className="flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold">
-                    <Sparkles className="h-3.5 w-3.5 text-amber-300" />
-                    Demo
-                  </div>
-                </div>
-
-                <div className="mt-6 grid grid-cols-3 gap-3 text-center">
-                  {[
-                    { label: "Precio lote", val: "$25,000", tip: "Promedio" },
-                    { label: "Inicial 20%", val: "$5,000", tip: "Una sola vez" },
-                    { label: "Cuota (72m)", val: "$390", tip: "Tasa 1.15%" },
-                  ].map((b) => (
-                    <div
-                      key={b.label}
-                      className="rounded-2xl bg-white/8 p-4"
-                    >
-                      <div className="text-[11px] uppercase tracking-wider text-white/70 font-semibold">
-                        {b.label}
-                      </div>
-                      <div className="mt-2 font-display text-2xl font-black text-amber-200">
-                        {b.val}
-                      </div>
-                      <div className="mt-1 text-[11px] text-white/60">
-                        {b.tip}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-6 space-y-5">
-                  <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-300">
-                      <CheckCircle2 className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <div className="text-sm font-bold">
-                        ¡Aprobación en 24h!
-                      </div>
-                      <div className="text-xs text-white/70">
-                        Solo necesitamos 3 documentos
-                      </div>
+            <div className="lg:col-span-7">
+              <div className="relative rounded-[2rem] overflow-hidden border-2 border-white/20 bg-white/5 p-3 shadow-2xl backdrop-blur">
+                <div className="flex items-center justify-between px-3 py-3">
+                  <div className="flex items-center gap-2">
+                    <div className="h-3 w-3 rounded-full bg-red-500" />
+                    <div className="h-3 w-3 rounded-full bg-amber-400" />
+                    <div className="h-3 w-3 rounded-full bg-emerald-500" />
+                    <div className="ml-4 text-xs font-black uppercase tracking-widest text-white/70">
+                      maps.google.com / Santa Margarita · Polloc
                     </div>
                   </div>
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-5 text-sm text-white/80">
-                    💡 Tip: Haz clic en cualquier proyecto y usa el simulador
-                    avanzado de esa página. Verás cuotas personalizadas, ITF,
-                    cronograma detallado y podrás enviar a WhatsApp en 1 clic.
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* TESTIMONIOS */}
-      <section
-        id="testimonios"
-        className="py-20 md:py-28 bg-white relative overflow-hidden"
-      >
-        <div className="container-app">
-          <div className="mx-auto max-w-3xl text-center">
-            <div className="inline-flex items-center gap-2 rounded-full bg-amber-100 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-amber-800 mb-4">
-              <Star className="h-3.5 w-3.5 fill-amber-500" />
-              Voces de nuestros clientes
-            </div>
-            <h2 className="font-display text-3xl md:text-5xl font-black tracking-tight text-slate-900">
-              Historias de familias que ya{" "}
-              <span className="bg-gradient-to-r from-[#0f4c81] to-[#1460a6] bg-clip-text text-transparent">
-                invirtieron con nosotros
-              </span>
-            </h2>
-            <p className="mt-4 text-lg text-slate-600">
-              Más de 900 familias felices ya construyeron su patrimonio con
-              Portal Terrenos. Tu historia podría ser la siguiente.
-            </p>
-          </div>
-
-          <div className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {TESTIMONIOS.map((t, i) => (
-              <motion.figure
-                key={t.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.45, delay: i * 0.08 }}
-                className="flex flex-col rounded-3xl border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-sm hover:shadow-xl transition-shadow"
-              >
-                <div className="flex items-center gap-3">
-                  <img
-                    src={t.photo}
-                    alt={t.name}
-                    className="h-14 w-14 rounded-2xl object-cover ring-2 ring-[#0f4c81]/20"
-                  />
-                  <figcaption>
-                    <div className="font-bold text-slate-900">{t.name}</div>
-                    <div className="text-xs font-medium text-slate-500">
-                      {t.role}
-                    </div>
-                  </figcaption>
-                </div>
-                <div className="mt-4 flex gap-0.5">
-                  {Array.from({ length: t.stars }).map((_, k) => (
-                    <Star
-                      key={k}
-                      className="h-4 w-4 fill-amber-400 text-amber-400"
-                    />
-                  ))}
-                </div>
-                <blockquote className="mt-4 text-sm leading-relaxed text-slate-700">
-                  “{t.text}”
-                </blockquote>
-              </motion.figure>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CONTACTO + MAPA */}
-      <section id="contacto" className="py-20 md:py-28 bg-slate-50">
-        <div className="container-app">
-          <div className="grid gap-8 lg:grid-cols-5">
-            {/* FORM + INFO */}
-            <div className="lg:col-span-2">
-              <div className="rounded-3xl bg-gradient-to-br from-[#0f4c81] via-[#1460a6] to-[#0b2e4c] p-8 text-white shadow-2xl shadow-[#0f4c81]/20">
-                <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-widest ring-1 ring-white/20 mb-4">
-                  <Phone className="h-3.5 w-3.5" />
-                  Contáctanos
-                </div>
-                <h3 className="font-display text-2xl md:text-3xl font-black leading-tight">
-                  Contáctanos para tu Inversión
-                </h3>
-                <p className="mt-3 text-white/80 text-sm">
-                  Déjanos tus datos y Abraham Saul Portal Garcia se pondrá en
-                  contacto contigo en menos de 24 horas.
-                </p>
-
-                <form onSubmit={handleSubmit} className="mt-6 space-y-3">
-                  <input
-                    type="text"
-                    placeholder="Nombre completo *"
-                    required
-                    value={formState.name}
-                    onChange={(e) =>
-                      setFormState((s) => ({ ...s, name: e.target.value }))
-                    }
-                    className="w-full rounded-xl border border-white/15 bg-white/10 px-4 py-3.5 text-sm text-white placeholder-white/50 backdrop-blur focus:border-white/50 focus:outline-none focus:ring-2 focus:ring-amber-300/50 transition-all"
-                  />
-                  <input
-                    type="email"
-                    placeholder="Email"
-                    value={formState.email}
-                    onChange={(e) =>
-                      setFormState((s) => ({ ...s, email: e.target.value }))
-                    }
-                    className="w-full rounded-xl border border-white/15 bg-white/10 px-4 py-3.5 text-sm text-white placeholder-white/50 backdrop-blur focus:border-white/50 focus:outline-none focus:ring-2 focus:ring-amber-300/50 transition-all"
-                  />
-                  <input
-                    type="tel"
-                    placeholder="Celular / WhatsApp *"
-                    required
-                    value={formState.phone}
-                    onChange={(e) =>
-                      setFormState((s) => ({ ...s, phone: e.target.value }))
-                    }
-                    className="w-full rounded-xl border border-white/15 bg-white/10 px-4 py-3.5 text-sm text-white placeholder-white/50 backdrop-blur focus:border-white/50 focus:outline-none focus:ring-2 focus:ring-amber-300/50 transition-all"
-                  />
-                  <textarea
-                    rows={3}
-                    placeholder="Mensaje (¿Qué proyecto te interesa?)"
-                    value={formState.message}
-                    onChange={(e) =>
-                      setFormState((s) => ({ ...s, message: e.target.value }))
-                    }
-                    className="w-full resize-none rounded-xl border border-white/15 bg-white/10 px-4 py-3.5 text-sm text-white placeholder-white/50 backdrop-blur focus:border-white/50 focus:outline-none focus:ring-2 focus:ring-amber-300/50 transition-all"
-                  />
-                  <button
-                    type="submit"
-                    disabled={formState.status === "sending"}
-                    className="w-full rounded-xl bg-amber-300 px-5 py-4 text-sm font-black uppercase tracking-wide text-[#0b2e4c] shadow-xl transition-all hover:-translate-y-0.5 hover:bg-amber-200 disabled:opacity-70 disabled:hover:translate-y-0"
-                  >
-                    {formState.status === "sending"
-                      ? "Enviando..."
-                      : formState.status === "ok"
-                      ? "✓ ¡Enviado! Te llamamos pronto."
-                      : "Enviar Consulta"}
-                  </button>
-                  {formState.status === "error" && (
-                    <p className="text-xs text-red-300">
-                      Hubo un error. Escríbenos directamente por WhatsApp.
-                    </p>
-                  )}
-                </form>
-
-                <div className="mt-6 pt-6 border-t border-white/15 space-y-3">
                   <a
-                    href={buildWhatsAppLink(
-                      "Hola Abraham! Quiero información de tus proyectos.",
-                      {
-                        source: "contacto_side",
-                        medium: "website",
-                        campaign: "contacto_form",
-                      }
-                    )}
+                    href="https://www.google.com/maps/d/u/0/viewer?mid=1PvoWFwx1KCVgwRaXNZgagA2QB5IDPy0&ll&z=16"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-3 rounded-xl bg-white/10 px-4 py-3 text-sm font-semibold transition-all hover:bg-white/20"
+                    className="hidden sm:inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-1.5 text-xs font-black uppercase tracking-wider text-white hover:bg-white/25 transition-colors"
                   >
-                    <MessageCircle className="h-5 w-5 text-emerald-300" />
-                    WhatsApp: +51 926 301 972
-                    <ExternalLink className="h-4 w-4 ml-auto text-white/50" />
+                    Abrir en Maps
+                    <ArrowRight className="h-3.5 w-3.5" />
                   </a>
-                  <a
-                    href="mailto:contacto@portalterrenos.pe"
-                    className="flex items-center gap-3 rounded-xl bg-white/10 px-4 py-3 text-sm font-semibold transition-all hover:bg-white/20"
-                  >
-                    📧 contacto@portalterrenos.pe
-                  </a>
-                  <div className="flex items-center gap-3 rounded-xl bg-white/10 px-4 py-3 text-sm font-semibold">
-                    <MapPin className="h-5 w-5 text-amber-300" />
-                    Lambayeque · Chiclayo · Perú
-                  </div>
                 </div>
-              </div>
-            </div>
-
-            {/* MAPA */}
-            <div className="lg:col-span-3">
-              <div className="mb-6">
-                <h3 className="font-display text-2xl md:text-3xl font-bold text-slate-900">
-                  Mapa de proyectos — Santa Margarita (Demo)
-                </h3>
-                <p className="mt-2 text-slate-600">
-                  ✨ Este es tu plano de{" "}
-                  <span className="font-semibold">Google My Maps</span>
-                  integrado directamente. Puedes hacer zoom, ver las parcelas
-                  marcadas y abrir en Google Maps completo. Repetiremos esto en
-                  cada uno de tus {PROJECTS.length} proyectos.
-                </p>
-              </div>
-
-              <div className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl shadow-slate-900/5">
-                <div className="absolute top-4 left-4 z-10 flex items-center gap-2 rounded-full bg-white/95 backdrop-blur px-4 py-2 text-xs font-bold text-[#0f4c81] shadow-lg ring-1 ring-black/5">
-                  <Map className="h-4 w-4" />
-                  Google My Maps · Santa Margarita – Polloc
-                </div>
-                <a
-                  href="https://www.google.com/maps/d/u/0/viewer?mid=1PvoWFwx1KCVgwRaXNZgagA2QB5IDPy0&ll&z=16"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="absolute top-4 right-4 z-10 inline-flex items-center gap-2 rounded-full bg-[#0f4c81] px-4 py-2 text-xs font-bold text-white shadow-lg hover:bg-[#1460a6] transition-all"
-                >
-                  Abrir en Google Maps
-                  <ExternalLink className="h-3.5 w-3.5" />
-                </a>
-                <div className="aspect-[16/10] w-full">
+                <div className="rounded-3xl overflow-hidden shadow-inner aspect-[16/11]">
                   <iframe
                     src="https://www.google.com/maps/d/embed?mid=1PvoWFwx1KCVgwRaXNZgagA2QB5IDPy0&hl=es"
                     width="100%"
@@ -869,48 +839,67 @@ export function HomePremium() {
                     style={{ border: 0 }}
                     loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
-                    title="Mapa de proyectos - Portal Terrenos"
+                    title="Mapa Portal Terrenos - Demo"
                     className="w-full h-full"
+                    allowFullScreen
                   />
                 </div>
               </div>
-
-              <div className="mt-6 grid gap-3 sm:grid-cols-3">
-                <Link
-                  href="/proyectos/santa-margarita-polloc"
-                  className="rounded-2xl border border-slate-200 bg-white p-4 transition-all hover:border-[#0f4c81]/30 hover:shadow-md"
-                >
-                  <div className="text-xs font-semibold text-slate-500">
-                    Ver plano completo
-                  </div>
-                  <div className="mt-1 font-bold text-[#0f4c81]">
-                    Santa Margarita →
-                  </div>
-                </Link>
-                <Link
-                  href="/proyectos/alameda-la-colpa"
-                  className="rounded-2xl border border-slate-200 bg-white p-4 transition-all hover:border-[#0f4c81]/30 hover:shadow-md"
-                >
-                  <div className="text-xs font-semibold text-slate-500">
-                    Proyecto premium
-                  </div>
-                  <div className="mt-1 font-bold text-[#0f4c81]">
-                    Alameda La Colpa →
-                  </div>
-                </Link>
-                <Link
-                  href="/proyectos/valle-5"
-                  className="rounded-2xl border border-slate-200 bg-white p-4 transition-all hover:border-[#0f4c81]/30 hover:shadow-md"
-                >
-                  <div className="text-xs font-semibold text-slate-500">
-                    Nivel alto
-                  </div>
-                  <div className="mt-1 font-bold text-[#0f4c81]">
-                    Valle 5 →
-                  </div>
-                </Link>
-              </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA FINAL */}
+      <section className="py-20 md:py-28 bg-gradient-to-br from-amber-400 via-amber-300 to-yellow-300 text-[#0b2e4c] relative overflow-hidden">
+        <div className="pointer-events-none absolute -left-20 top-0 h-96 w-96 rounded-full bg-white/40 blur-3xl" />
+        <div className="pointer-events-none absolute -right-20 bottom-0 h-[500px] w-[500px] rounded-full bg-[#0f4c81]/10 blur-3xl" />
+        <div className="container-app relative max-w-4xl text-center">
+          <div className="inline-flex items-center gap-2 rounded-full bg-white/60 backdrop-blur px-4 py-1.5 text-[11px] font-black uppercase tracking-widest ring-1 ring-white mb-6">
+            <Sparkles className="h-3.5 w-3.5" />
+            ¡Primera asesoría GRATIS!
+          </div>
+          <h2 className="font-display text-4xl md:text-6xl font-black leading-[1.05] tracking-tight">
+            ¿Listo para ser{" "}
+            <span className="text-[#0f4c81]">propietario</span> de tu lote en
+            Cajamarca?
+          </h2>
+          <p className="mt-6 text-lg md:text-xl text-[#0b2e4c]/80 leading-relaxed max-w-2xl mx-auto">
+            Empieza con un solo clic. Abraham te llamará HOY mismo, te
+            recomendará los 3 mejores proyectos según tu presupuesto y te
+            invitará a una visita guiada SIN COSTO.
+          </p>
+
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a
+              href={buildWhatsAppLink(
+                "Hola Abraham! Vengo del HOME de Portal Terrenos. Quiero mi PRIMERA ASESORÍA GRATUITA. Mi presupuesto: S/ ... Mi objetivo es (construir / invertir):...",
+                {
+                  source: "home_cta_final",
+                  medium: "website",
+                  campaign: "asesoria_gratuita",
+                }
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-whatsapp justify-center !py-5 !text-base shadow-2xl shadow-emerald-700/20"
+              onClick={() =>
+                trackEvent({
+                  name: "whatsapp_click",
+                  params: { button_location: "home_cta_final" },
+                })
+              }
+            >
+              <MessageCircle className="h-5 w-5" />
+              Empezar asesoría gratuita HOY
+            </a>
+            <Link
+              href="/contacto"
+              className="inline-flex items-center justify-center gap-3 rounded-2xl bg-white/90 ring-1 ring-white px-7 py-5 text-sm md:text-base font-black uppercase tracking-wide text-[#0b2e4c] shadow-md transition-all hover:bg-white hover:-translate-y-0.5"
+            >
+              Rellenar formulario
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
         </div>
       </section>
@@ -918,5 +907,28 @@ export function HomePremium() {
   );
 }
 
-/* Helper to avoid unused-import warnings on format helpers */
-export const _formatters = { formatPEN, formatUSD };
+function MiniStat({
+  icon,
+  value,
+  label,
+  color,
+}: {
+  icon: React.ReactNode;
+  value: string;
+  label: string;
+  color: string;
+}) {
+  return (
+    <div className="rounded-2xl bg-slate-50 border border-slate-100 p-3 transition-all hover:bg-white hover:border-slate-200 hover:shadow-sm">
+      <div className={`flex justify-center text-${color}`}>{icon}</div>
+      <div className="mt-1 text-center font-display text-sm md:text-base font-black text-slate-900">
+        {value}
+      </div>
+      <div className="text-center text-[10px] md:text-[11px] font-black uppercase tracking-wider text-slate-400 leading-tight">
+        {label}
+      </div>
+    </div>
+  );
+}
+
+export const _formatters = { formatPEN };

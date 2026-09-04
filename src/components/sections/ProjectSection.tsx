@@ -14,7 +14,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { LOTS_DATA } from "@/data/lots";
-import { buildWhatsAppLink, formatCurrencyDollars } from "@/lib/whatsapp";
+import { buildWhatsAppLink, formatCurrencySoles } from "@/lib/whatsapp";
 import { trackEvent } from "@/lib/analytics";
 import { siteConfig } from "@/config/site";
 
@@ -87,10 +87,10 @@ const HIGHLIGHTS = [
   },
   {
     label: "Precio desde",
-    value: formatCurrencyDollars(
-      Math.min(...LOTS_DATA.map((l) => l.price_usd))
+    value: formatCurrencySoles(
+      Math.min(...LOTS_DATA.map((l) => l.price_pen ?? l.price_usd * 3.8))
     ),
-    desc: "con financiamiento",
+    desc: "documentos legales incluidos",
   },
 ];
 

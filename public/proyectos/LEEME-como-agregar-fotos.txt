@@ -1,0 +1,114 @@
+============================================================================
+  COMO AGREGAR TUS PROPIAS FOTOS A CADA PROYECTO - PORTAL TERRENOS
+============================================================================
+
+Hola Abraham! Este es el manual para que reemplaces las fotos temporales
+por las FOTOS REALES DE CADA PROYECTO QUE TU TIENES.
+
+⚠️  REGLAS QUE DEBES CUMPLIR (si no, las fotos NO APARECERAN!):
+----------------------------------------------------------------
+1. NUNCA usar espacios ni mayúsculas ni tildes en los NOMBRES DE ARCHIVOS.
+   Mal:  "Foto Lote 01.JPG",  "TERRENO DE FRENTE.jpg"
+   Bien: "hero.jpg", "g1.jpg", "lote-01-frente.jpg"
+
+2. SOLO FORMATO .JPG o .JPEG o .PNG (tienen que terminar EXACTAMENTE en:
+   ".jpg", NO ".JPG", NO ".jpeg" por ahora).
+
+3. Resolución recomendada: 1920 x 1080 ó 1600 x 1000 (fotos horizontales
+   siempre son mejores para web).
+
+4. No dejes fotos pesadas. Si una foto pesa más de 1 MB, usa esta página
+   GRATIS para reducirla antes de copiarla:
+   https://tinyjpg.com/
+
+===========================================================================
+  ESTRUCTURA DE CARPETAS (YA ESTÁN CREADAS!):
+===========================================================================
+
+public/
+├── foto-abraham.jpg          <- TU FOTO PERSONAL (para la página NOSOTROS)
+│
+└── proyectos/                <- 10 carpetas, una por cada proyecto
+    │
+    ├── santa-margarita-polloc/
+    │   ├── hero.jpg          <- FOTO PRINCIPAL (16:9, la que sale arriba)
+    │   ├── g1.jpg            <- Galería foto 1
+    │   ├── g2.jpg            <- Galería foto 2
+    │   ├── g3.jpg            <- Galería foto 3
+    │   └── g4.jpg            <- Galería foto 4
+    │
+    ├── alameda-la-colpa/     (lo mismo dentro: hero.jpg, g1..g4.jpg)
+    ├── la-finca/
+    ├── planicies-del-valle/
+    ├── valle-4-etapa-1/
+    ├── valle-4-etapa-2-3/
+    ├── valle-5/
+    ├── valle-6/
+    ├── valle-7/
+    └── la-pirca/
+
+===========================================================================
+  ¿QUE HAGO YO PASO A PASO?
+===========================================================================
+
+PASO 1. Elige un proyecto, por ejemplo "Santa Margarita - Polloc"
+
+PASO 2. Abre EXPLORADOR DE ARCHIVOS de Windows y ve a la carpeta:
+
+     D:\TRABAJOS DE PROGRAMACIÓN\Portal Terrenos\public\proyectos\
+                                              \santa-margarita-polloc\
+
+PASO 3. Copia TUS 5 FOTOS REALES dentro. Renombralas así:
+
+     - La MEJOR foto de frente del proyecto  →  hero.jpg
+     - La segunda foto (plano aéreo)         →  g1.jpg
+     - La tercera  (entrada, calles)        →  g2.jpg
+     - La cuarta   (area social, parques)   →  g3.jpg
+     - La quinta   (vista de frente, lotes) →  g4.jpg
+
+PASO 4. ¡LISTO! No necesitas hacer nada más. Cuando guardes Next.js
+        automáticamente detectará las nuevas fotos. Las que no tengas
+        listas todavía quedarán con la foto temporal de Unsplash hasta
+        que coloques la tuya.
+
+PASO 5. Repite lo MISMO para los otros 9 proyectos.
+
+PASO 6. Para TU FOTO PERSONAL:
+        Copia una foto tuya (rostro, entero o medio cuerpo, bien iluminada)
+        en la carpeta:
+           D:\TRABAJOS DE PROGRAMACIÓN\Portal Terrenos\public\
+        y renombrala EXACTAMENTE:
+           foto-abraham.jpg   (minúsculas, SIN espacios)
+
+===========================================================================
+  LISTA DE 10 SLUGS (NOMBRES) DE PROYECTOS:
+===========================================================================
+  1  santa-margarita-polloc    = SANTA MARGARITA – POLLOC
+  2  alameda-la-colpa          = ALAMEDA LA COLPA
+  3  la-finca                  = LA FINCA
+  4  planicies-del-valle       = PLANICIES DEL VALLE
+  5  valle-4-etapa-1           = VALLE 4 ETAPA 1
+  6  valle-4-etapa-2-3         = VALLE 4 ETAPA 2 Y 3
+  7  valle-5                   = VALLE 5
+  8  valle-6                   = VALLE 6
+  9  valle-7                   = VALLE 7
+ 10  la-pirca                  = LA PIRCA
+
+===========================================================================
+  ¿SI AGREGO MÁS DE 4 FOTOS A LA GALERÍA?
+===========================================================================
+Perfecto, ¡agrega las que quieras! Se mostrarán TODAS automáticamente
+si las nombras: g1.jpg, g2.jpg, g3.jpg, g4.jpg, g5.jpg, g6.jpg, ...
+(secuenciales desde g1).
+
+Siempre: minúsculas, sin espacios, extensión .jpg.
+
+===========================================================================
+  ¿COMO VERIFICAR SI FUNCIONÓ?
+===========================================================================
+Ejecuta el proyecto con:   npm run dev
+Abre en tu navegador:      http://localhost:3000/proyectos
+Entra al proyecto y deberías ver TUS FOTOS en lugar de las temporales.
+
+Cualquier duda me escribes al WhatsApp: +51 926 301 972  (Abraham Portal)
+o al programador que te armó esto. 👷‍♂️💻

@@ -93,7 +93,7 @@ export function Footer() {
               ))}
             </ul>
             <Link
-              href="#proyectos-destacados"
+              href="/proyectos"
               className="mt-5 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#67b7f3] hover:text-amber-300 transition-colors"
             >
               Ver todos los {PROJECTS.length} proyectos
@@ -190,13 +190,13 @@ export function Footer() {
             © {new Date().getFullYear()} {siteConfig.name}. Todos los derechos reservados. Hecho con 🇵🇪 por Abraham Saul Portal Garcia.
           </p>
           <div className="flex flex-wrap gap-5 text-xs text-slate-500">
-            <Link href="#" className="transition-colors hover:text-white">
+            <Link href="/contacto" className="transition-colors hover:text-white">
               Términos y Condiciones
             </Link>
-            <Link href="#" className="transition-colors hover:text-white">
+            <Link href="/contacto" className="transition-colors hover:text-white">
               Política de Privacidad
             </Link>
-            <Link href="#" className="transition-colors hover:text-white">
+            <Link href="/contacto" className="transition-colors hover:text-white">
               Libro de Reclamaciones
             </Link>
           </div>

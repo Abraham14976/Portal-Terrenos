@@ -8,9 +8,9 @@ import { siteConfig } from "@/config/site";
 import { LOTS_DATA } from "@/data/lots";
 
 const HERO_FEATURES = [
-  "Desde $22,800 USD",
-  "12 lotes disponibles",
-  "Financiamiento directo",
+  "Desde S/ 57,000 soles",
+  "10 proyectos en Cajamarca",
+  "Documentos legales incluidos",
   "Áreas de 120 - 180 m²",
 ];
 
@@ -64,7 +64,7 @@ export function HeroSection() {
           >
             Descubre una exclusiva lotización con áreas verdes, seguridad 24/7, piscina y
             acceso controlado. <strong>{lotsDisponibles} lotes</strong> premium disponibles con
-            financiamiento flexible y cuotas desde $342/mes.
+            documentos legales y título de propiedad inscrito en SUNARP.
           </motion.p>
 
           <motion.div
@@ -108,7 +108,7 @@ export function HeroSection() {
             </a>
             <a
               href={buildWhatsAppLink(
-                "Hola! He visto el proyecto en tu web y quiero más información sobre los lotes disponibles y el financiamiento.",
+                "Hola! He visto el proyecto en tu web y quiero más información sobre los lotes disponibles y los documentos legales.",
                 {
                   source: "hero",
                   medium: "website",
@@ -221,7 +221,7 @@ export function HeroSection() {
             </div>
             <div>
               <p className="text-xs text-slate-500">Precio desde</p>
-              <p className="font-display text-lg font-bold text-slate-900">$22,800 USD</p>
+              <p className="font-display text-lg font-bold text-slate-900">S/ 57,000 soles</p>
             </div>
           </motion.div>
 

@@ -27,7 +27,7 @@ export async function generateMetadata({
   }
   return {
     title: `${project.name} | Lotes en ${project.region} · Portal Terrenos`,
-    description: `${project.tagline}. ${project.description}. Precios desde ${project.minPrice} USD. Asesoría personalizada de Abraham Saul Portal Garcia.`,
+    description: `${project.tagline}. ${project.description}. Precios desde S/ ${project.minPrice.toLocaleString()} soles. Asesoría personalizada de Abraham Saul Portal Garcia.`,
     keywords: [
       project.name,
       "lotes",
@@ -39,7 +39,7 @@ export async function generateMetadata({
     ],
     openGraph: {
       title: `${project.name} · Portal Terrenos`,
-      description: project.tagline,
+      description: `${project.tagline} · Precios desde S/ ${project.minPrice.toLocaleString()} soles`,
       images: [project.heroImage],
     },
   };
@@ -52,7 +52,7 @@ export default async function ProjectPage({ params }: PageProps) {
   return (
     <div className="relative overflow-x-hidden">
       <Navbar />
-      <ProjectDetail slug={slug} />
+      <ProjectDetail project={project} />
       <Footer />
       <FloatingWhatsApp />
     </div>
